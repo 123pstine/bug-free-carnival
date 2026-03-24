@@ -9,7 +9,6 @@
 <input id="city" placeholder="City"><br>
 <input id="state" placeholder="State"><br>
 <input id="zip" placeholder="ZIP"><br>
-<input id="weight" placeholder="Weight (lbs)"><br>
 
 <button onclick="createLabel()">Create Return Label</button>
 
@@ -23,7 +22,7 @@ async function createLabel() {
     fromCity: document.getElementById("city").value,
     fromState: document.getElementById("state").value,
     fromZip: document.getElementById("zip").value,
-    weight: document.getElementById("weight").value
+    weight: "1"
   };
 
   const res = await fetch("https://script.google.com/a/macros/nhaschools.com/s/AKfycbxbyJ12n_oSn-aaPPJvYEz9RclGBv0K6jKrnShXFObrrLopDDsFsnvGDEXrVtxx9quxJQ/exec", {
@@ -33,14 +32,13 @@ async function createLabel() {
 
   const json = await res.json();
 
-  const label = json.ShipmentResponse?.ShipmentResults?.PackageResults?.ShippingLabel?.GraphicImage;
-
-  if (label) {
-    document.getElementById("result").innerHTML =
-      `<img src="data:image/gif;base64,${label}" />`;
+ if (json.downloadUrl) {
+    document.getElementById("download").innerHTML =
+      `<a href="${json.downloadUrl}" target="_blank">
+        Download Return Label (PDF)
+      </a>`;
   } else {
-    document.getElementById("result").innerText =
-      JSON.stringify(json, null, 2);
+    console.log(json);
   }
 }
 </script>
