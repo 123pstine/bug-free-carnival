@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h3>Create Return Label</h3>
+
+<input id="name" placeholder="Your Name"><br>
+<input id="address" placeholder="Your Address"><br>
+<input id="city" placeholder="City"><br>
+<input id="state" placeholder="State"><br>
+<input id="zip" placeholder="ZIP"><br>
+<input id="weight" placeholder="Weight (lbs)"><br>
+
+<button onclick="createLabel()">Create Return Label</button>
+
+<div id="result"></div>
+
+<script>
+async function createLabel() {
+  const data = {
+    fromName: document.getElementById("name").value,
+    fromAddress: document.getElementById("address").value,
+    fromCity: document.getElementById("city").value,
+    fromState: document.getElementById("state").value,
+    fromZip: document.getElementById("zip").value,
+    weight: document.getElementById("weight").value
+  };
+
+  const res = await fetch("https://script.google.com/a/macros/nhaschools.com/s/AKfycbxbyJ12n_oSn-aaPPJvYEz9RclGBv0K6jKrnShXFObrrLopDDsFsnvGDEXrVtxx9quxJQ/exec", {
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+
+  const json = await res.json();
+
+  const label = json.ShipmentResponse?.ShipmentResults?.PackageResults?.ShippingLabel?.GraphicImage;
+
+  if (label) {
+    document.getElementById("result").innerHTML =
+      `<img src="data:image/gif;base64,${label}" />`;
+  } else {
+    document.getElementById("result").innerText =
+      JSON.stringify(json, null, 2);
+  }
+}
+</script>
+
+</body>
+</html>
